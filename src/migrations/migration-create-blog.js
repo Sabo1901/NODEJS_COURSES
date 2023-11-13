@@ -20,7 +20,22 @@ module.exports = {
             date: {
                 type: Sequelize.DATE
             },
-
+            contentHTML: {
+                allowNull: false,
+                type: Sequelize.TEXT('long')
+            },
+            contentMarkdown: {
+                allowNull: false,
+                type: Sequelize.TEXT('long')
+            },
+            description: {
+                allowNull: true,
+                type: Sequelize.TEXT('long')
+            },
+            userId: {
+                allowNull: true,
+                type: Sequelize.INTEGER
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

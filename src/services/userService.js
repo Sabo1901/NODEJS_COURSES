@@ -25,7 +25,7 @@ let handleUserLogin = (email, password) => {
                 //user already exist
                 //compare password
                 let user = await db.User.findOne({
-                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName'],
+                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName', 'id'],
                     where: { email: email },
                     raw: true
                     // attributes: {
@@ -65,6 +65,53 @@ let handleUserLogin = (email, password) => {
 }
 
 
+let handleUserLoginClient = (email, password) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let userData = {};
+            let isExist = await checkUserEmail(email);
+            if (isExist) {
+                //user already exist
+                //compare password
+                let user = await db.User.findOne({
+                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName', 'id'],
+                    where: { email: email, roleId: 'R3' },
+                    raw: true
+                    // attributes: {
+                    //     include: ['email', 'roleId'],
+                    // }
+                });
+                if (user) {
+                    let check = await bcrypt.compareSync(password, user.password);
+
+                    if (check) {
+                        userData.errCode = 0;
+                        userData.errMessage = 'OK';
+                        delete user.password;
+                        userData.user = user;
+                    } else {
+                        userData.errCode = 3;
+                        userData.errMessage = `Wrong password`;
+                    }
+
+                } else {
+                    userData.errCode = 2;
+                    userData.errMessage = `User's not found`
+                }
+
+            } else {
+                //return error
+                userData.errCode = 1;
+                userData.errMessage = `Your's Email isn't exist in your system. Plz try other Email!`
+
+            }
+            resolve(userData)
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 let checkUserEmail = (userEmail) => {
     return new Promise(async (resolve, reject) => {
@@ -231,12 +278,230 @@ let getAllCodeService = (typeInput) => {
     })
 }
 
+let saveCreateBlog = (inputData) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputData.contentHTML || !inputData.contentMarkdown) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter!'
+                })
+            } else {
+                if (inputData.action === 'CREATE') {
+                    await db.Blog.create({
+                        contentHTML: inputData.contentHTML,
+                        contentMarkdown: inputData.contentMarkdown,
+                        description: inputData.description,
+                        title: inputData.title,
+                        image: inputData.avatar,
+                        userId: inputData.userId,
+
+                    })
+                } else if (inputData.action === 'EDIT') {
+                    let userMarkdown = await db.Blog.findOne({
+                        where: { userId: inputData.userId },
+                        raw: false
+                    })
+                    if (userMarkdown) {
+                        userMarkdown.contentHTML = inputData.contentHTML;
+                        userMarkdown.contentMarkdown = inputData.contentMarkdown;
+                        userMarkdown.title = inputData.title;
+                        userMarkdown.image = inputData.avatar;
+                        userMarkdown.description = inputData.description;
+                        userMarkdown.updateAt = new Date();
+                        await userMarkdown.save()
+                    }
+                }
+
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Save detail course succeed'
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let getAllBlogs = (blogId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let blogs = '';
+            if (blogId === 'ALL') {
+                blogs = await db.Blog.findAll({
+                    // attributes: {
+                    //     exclude: ['password']
+                    // }
+                })
+            } if (blogId && blogId !== 'ALL') {
+                blogs = await db.Blog.findOne({
+                    where: { id: blogId },
+                    // attributes: {
+                    //     exclude: ['password']
+                    // }
+                })
+            }
+            resolve(blogs)
+        } catch (e) {
+            reject(e);
+        }
+    })
+
+}
+
+let getDetailBlogByIdService = (inputId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameter!'
+                })
+            } else {
+                let data = await db.Blog.findOne({
+                    where: {
+                        id: inputId
+                    },
+                    // attributes: {
+                    //     exclude: ['detail']
+                    // },
+                    include: [
+                        { model: db.User, attributes: ['firstName', 'lastName'] }
+                    ],
+                    raw: false,
+                    nest: true
+                })
+                if (data && data.image) {
+                    data.image = new Buffer(data.image, 'base64').toString('binary');
+                }
+                if (!data) data = {};
+                resolve({
+                    errCode: 0,
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+let getTopBlogHomeService = (limitInput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let blogs = await db.Blog.findAll({
+                limit: limitInput,
+                order: [['createdAt', 'DESC']],
+                raw: true,
+                nest: true
+            })
+
+            resolve({
+                errCode: 0,
+                data: blogs
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+let getAllBlogsUser = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let blogs = '';
+            blogs = await db.Blog.findAll({
+                where: {
+                    userId: userId,
+
+                },
+                // attributes: {
+                //     exclude: ['password']
+                // }
+            })
+
+            resolve(blogs)
+        } catch (e) {
+            reject(e);
+        }
+    })
+
+}
+let deleteBlog = (blogId) => {
+    return new Promise(async (resolve, reject) => {
+        let foundBlog = await db.Blog.findOne({
+            where: { id: blogId },
+            raw: false
+        })
+        if (!foundBlog) {
+            resolve({
+                errCode: 2,
+                errMessage: `The Blog isn't exits`
+            })
+        }
+
+        await db.Blog.destroy({
+            where: { id: blogId }
+        })
+
+        resolve({
+            errCode: 0,
+            errMessage: 'The Blog is deleted'
+        })
+    })
+}
+let updateBlogData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'Missing required parameters'
+                })
+            }
+            let blog = await db.Blog.findOne({
+                where: { id: data.id },
+                raw: false,
+            })
+            if (blog) {
+                blog.title = data.title;
+                blog.contentHTML = data.contentHTML;
+                blog.contentMarkdown = data.contentMarkdown;
+                blog.detail = data.detail;
+                blog.description = data.description;
+                if (data.avatar) {
+                    blog.image = data.avatar;
+                }
+                await blog.save();
+
+                resolve({
+                    errCode: 0,
+                    message: 'Update ther blog succeeds!'
+                })
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Blog's not found!`
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     deleteUser: deleteUser,
     updateUserData: updateUserData,
-    getAllCodeService: getAllCodeService
-
+    getAllCodeService: getAllCodeService,
+    handleUserLoginClient: handleUserLoginClient,
+    saveCreateBlog: saveCreateBlog,
+    getAllBlogs: getAllBlogs,
+    getDetailBlogByIdService: getDetailBlogByIdService,
+    getTopBlogHomeService: getTopBlogHomeService,
+    getAllBlogsUser: getAllBlogsUser,
+    deleteBlog: deleteBlog,
+    updateBlogData: updateBlogData
 }

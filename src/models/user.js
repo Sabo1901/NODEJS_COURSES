@@ -11,8 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.belongsTo(models.Allcode, { foreignKey: 'gender', targetKey: 'keyMap', as: 'genderData' })
-
+      User.belongsTo(models.Allcode, { foreignKey: 'gender', targetKey: 'keyMap', as: 'genderData' }),
+        User.hasMany(models.Blog, { foreignKey: 'userId' }),
+        User.belongsTo(models.Scholastic, { foreignKey: 'scholasticId' })
     }
   };
   User.init({
@@ -25,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     gender: DataTypes.STRING,
     image: DataTypes.STRING,
     roleId: DataTypes.STRING,
-    positionId: DataTypes.STRING,
+    scholasticId: DataTypes.INTEGER,
 
   }, {
     sequelize,

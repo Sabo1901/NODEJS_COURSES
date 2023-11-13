@@ -21,6 +21,29 @@ let handleLogin = async (req, res) => {
     })
 
 }
+let handleLoginClient = async (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+
+    if (!email || !password) {
+        return res.status(500).json({
+            errCode: 1,
+            message: 'Missing inputs parameter!'
+        })
+    }
+
+    let userData = await userService.handleUserLoginClient(email, password);
+
+    return res.status(200).json({
+        errCode: userData.errCode,
+        message: userData.errMessage,
+        user: userData.user ? userData.user : {}
+
+    })
+
+}
+
+
 
 let handleGetAllUsers = async (req, res) => {
     let id = req.query.id;
@@ -71,6 +94,95 @@ let getAllCode = async (req, res) => {
         })
     }
 }
+
+let postCreateBlog = async (req, res) => {
+    try {
+        let response = await userService.saveCreateBlog(req.body);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server...'
+        })
+    }
+}
+
+let handleGetAllBlogs = async (req, res) => {
+    let id = req.query.id;
+    if (!id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: 'Missing required parameters',
+            blogs: []
+        })
+    }
+    let blogs = await userService.getAllBlogs(id);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: 'OK',
+        blogs
+    })
+
+}
+let getDetailBlogById = async (req, res) => {
+    try {
+        let infor = await userService.getDetailBlogByIdService(req.query.id);
+        return res.status(200).json(infor);
+    } catch (e) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server...'
+        })
+    }
+}
+let getTopBlogHome = async (req, res) => {
+    let limit = req.query.limit;
+    if (!limit) limit = 10;
+    try {
+        let response = await userService.getTopBlogHomeService(+limit);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server...'
+        })
+    }
+
+}
+
+let handleGetAllBlogsUser = async (req, res) => {
+    let userId = req.query.userId;
+    if (!userId) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: 'Missing required parameters',
+            blogs: []
+        })
+    }
+    let blogs = await userService.getAllBlogsUser(userId);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: 'OK',
+        blogs
+    })
+
+}
+let handleDeleteBlog = async (req, res) => {
+    if (!req.body.id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: "Missing required parameters!"
+        })
+    }
+    let message = await userService.deleteBlog(req.body.id);
+    return res.status(200).json(message);
+}
+let handleEditBlog = async (req, res) => {
+    let data = req.body;
+    let message = await userService.updateBlogData(data);
+    return res.status(200).json(message)
+}
+
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllUsers: handleGetAllUsers,
@@ -78,4 +190,12 @@ module.exports = {
     handleEditUser: handleEditUser,
     handleDeleteUser: handleDeleteUser,
     getAllCode: getAllCode,
+    handleLoginClient: handleLoginClient,
+    postCreateBlog: postCreateBlog,
+    handleGetAllBlogs: handleGetAllBlogs,
+    getDetailBlogById: getDetailBlogById,
+    getTopBlogHome: getTopBlogHome,
+    handleGetAllBlogsUser: handleGetAllBlogsUser,
+    handleDeleteBlog: handleDeleteBlog,
+    handleEditBlog: handleEditBlog
 }

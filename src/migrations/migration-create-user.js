@@ -32,8 +32,8 @@ module.exports = {
       phonenumber: {
         type: Sequelize.STRING
       },
-      positionId: {
-        type: Sequelize.STRING
+      scholasticId: {
+        type: Sequelize.INTEGER
       },
       image: {
         type: Sequelize.STRING

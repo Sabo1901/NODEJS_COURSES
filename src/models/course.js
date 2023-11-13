@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Course.hasOne(models.Markdown, { foreignKey: 'courseId' })
+            Course.hasOne(models.Markdown, { foreignKey: 'courseId' }),
+                Course.hasMany(models.Video, { foreignKey: 'courseId' }),
+                Course.hasMany(models.Roadmap, { foreignKey: 'courseId' })
         }
     };
     Course.init({
@@ -20,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
         detail: DataTypes.TEXT,
         describe: DataTypes.TEXT,
         image: DataTypes.STRING,
-        price: DataTypes.INTEGER,
-        soldquantity: DataTypes.INTEGER,
+        tantamount: DataTypes.INTEGER,
+        viewed: DataTypes.INTEGER,
     }, {
         sequelize,
         modelName: 'Course',

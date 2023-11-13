@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Blog.belongsTo(models.User, { foreignKey: 'userId' })
         }
     };
     Blog.init({
@@ -18,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         detail: DataTypes.TEXT,
         image: DataTypes.STRING,
         date: DataTypes.DATE,
+        userId: DataTypes.INTEGER,
+        contentHTML: DataTypes.TEXT('long'),
+        contentMarkdown: DataTypes.TEXT('long'),
+        description: DataTypes.TEXT('long'),
 
     }, {
         sequelize,

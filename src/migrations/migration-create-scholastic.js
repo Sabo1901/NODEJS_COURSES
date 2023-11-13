@@ -1,19 +1,21 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('order', {
+        await queryInterface.createTable('scholastics', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-
-            Date: {
-                type: Sequelize.DATE
-            },
-            TotalPrice: {
+            prerequisiteId: {
                 type: Sequelize.INTEGER
+            },
+            scholastic: {
+                type: Sequelize.STRING
+            },
+            diagram: {
+                type: Sequelize.BLOB('long')
             },
             createdAt: {
                 allowNull: false,
@@ -26,6 +28,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('order');
+        await queryInterface.dropTable('scholastics');
     }
 };

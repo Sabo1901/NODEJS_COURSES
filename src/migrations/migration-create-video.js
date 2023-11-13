@@ -8,16 +8,16 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            CouserId: {
+            courseId: {
                 type: Sequelize.INTEGER
             },
-            LinkVideo: {
+            linkVideo: {
                 type: Sequelize.STRING
             },
-            Chapter: {
+            chapter: {
                 type: Sequelize.STRING
             },
-            TitleArticle: {
+            titleArticle: {
                 type: Sequelize.STRING
             },
             createdAt: {

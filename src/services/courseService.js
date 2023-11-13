@@ -35,8 +35,8 @@ let createNewCourse = (data) => {
                 lecturers: data.lecturers,
                 detail: data.detail,
                 describe: data.describe,
-                price: data.price,
-                soldquantity: data.soldquantity,
+                tantamount: data.tantamount,
+                viewed: data.viewed,
                 image: data.avatar
 
             })
@@ -91,8 +91,8 @@ let updateCourseData = (data) => {
                 course.lecturers = data.lecturers;
                 course.detail = data.detail;
                 course.describe = data.describe;
-                course.price = data.price;
-                course.soldquantity = data.soldquantity;
+                course.tantamount = data.tantamount;
+                course.viewed = data.viewed;
 
                 if (data.avatar) {
                     course.image = data.avatar;

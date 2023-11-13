@@ -1,30 +1,28 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('cartdetails', {
+        await queryInterface.createTable('roadmaps', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-
-            cartId: {
+            semester: {
                 type: Sequelize.INTEGER
+            },
+            credit: {
+                type: Sequelize.INTEGER
+            },
+            prerequisite: {
+                type: Sequelize.STRING
             },
             courseId: {
                 type: Sequelize.INTEGER
             },
-            NameCourse: {
-                type: Sequelize.STRING
-            },
-            Total: {
+            scholasticId: {
                 type: Sequelize.INTEGER
             },
-            Detail: {
-                type: Sequelize.STRING
-            },
-
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE
@@ -36,6 +34,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('cartdetails');
+        await queryInterface.dropTable('roadmaps');
     }
 };

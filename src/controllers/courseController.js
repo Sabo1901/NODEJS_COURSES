@@ -84,5 +84,5 @@ module.exports = {
     handleDeleteCourse: handleDeleteCourse,
     getTopCourseHome: getTopCourseHome,
     postDetailCourse: postDetailCourse,
-    getDetailCourseById: getDetailCourseById
+    getDetailCourseById: getDetailCourseById,
 }

@@ -23,10 +23,10 @@ module.exports = {
             image: {
                 type: Sequelize.STRING
             },
-            price: {
+            tantamount: {
                 type: Sequelize.INTEGER
             },
-            soldquantity: {
+            viewed: {
                 type: Sequelize.INTEGER
             },
             createdAt: {
