@@ -74,7 +74,7 @@ let handleUserLoginClient = (email, password) => {
                 //user already exist
                 //compare password
                 let user = await db.User.findOne({
-                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName', 'id'],
+                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName', 'id', 'image'],
                     where: { email: email, roleId: 'R3' },
                     raw: true
                     // attributes: {
@@ -176,6 +176,7 @@ let createNewUser = (data) => {
                     phonenumber: data.phonenumber,
                     gender: data.gender,
                     roleId: data.roleId,
+                    scholasticId: data.scholasticId,
                     image: data.avatar
                 })
                 resolve({
@@ -216,7 +217,7 @@ let deleteUser = (userId) => {
 let updateUserData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id || !data.roleId || !data.gender) {
+            if (!data.id) {
                 resolve({
                     errCode: 2,
                     errMessage: 'Missing required parameters'
@@ -232,6 +233,7 @@ let updateUserData = (data) => {
                 user.address = data.address;
                 user.roleId = data.roleId;
                 user.gender = data.gender;
+                user.scholasticId = data.scholasticId;
                 user.phonenumber = data.phonenumber;
                 if (data.avatar) {
                     user.image = data.avatar;
@@ -488,6 +490,39 @@ let updateBlogData = (data) => {
         }
     })
 }
+let getDetailUserByIdService = (inputId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameter!'
+                })
+            } else {
+                let data = await db.User.findOne({
+                    where: {
+                        id: inputId
+                    },
+                    // attributes: {
+                    //     exclude: ['detail']
+                    // },
+                    raw: false,
+                    nest: true
+                })
+                if (data && data.image) {
+                    data.image = new Buffer(data.image, 'base64').toString('binary');
+                }
+                if (!data) data = {};
+                resolve({
+                    errCode: 0,
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 module.exports = {
     handleUserLogin: handleUserLogin,
@@ -503,5 +538,6 @@ module.exports = {
     getTopBlogHomeService: getTopBlogHomeService,
     getAllBlogsUser: getAllBlogsUser,
     deleteBlog: deleteBlog,
-    updateBlogData: updateBlogData
+    updateBlogData: updateBlogData,
+    getDetailUserByIdService: getDetailUserByIdService
 }

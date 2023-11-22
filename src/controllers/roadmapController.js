@@ -18,6 +18,26 @@ let handleGetAllRoadmaps = async (req, res) => {
     })
 
 }
+let handleGetRoadmaps = async (req, res) => {
+    let id = req.query.id;
+    if (!id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: 'Missing required parameters',
+            roadmaps: []
+        })
+    }
+    let roadmaps = await roadmapService.getRoadmaps(id);
+    return res.status(200).json({
+        errCode: 0,
+        errMessage: 'OK',
+        roadmaps
+    })
+
+}
+
+
+
 let handleCreateNewRoadmap = async (req, res) => {
     let message = await roadmapService.createNewRoadmap(req.body);
     return res.status(200).json(message);
@@ -98,5 +118,6 @@ module.exports = {
     handleCreateNewRoadmap: handleCreateNewRoadmap,
     handleDeleteRoadmap: handleDeleteRoadmap,
     handleEditRoadmap: handleEditRoadmap,
-    getDetailScholasticById: getDetailScholasticById
+    getDetailScholasticById: getDetailScholasticById,
+    handleGetRoadmaps: handleGetRoadmaps
 }

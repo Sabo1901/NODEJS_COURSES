@@ -22,6 +22,7 @@ let intitWebRoutes = (app) => {
     router.post('/api/create-new-user', userController.handleCreateNewUser);
     router.put('/api/edit-user', userController.handleEditUser);
     router.delete('/api/delete-user', userController.handleDeleteUser);
+    router.get('/api/get-detail-users-by-id', userController.getDetailUserById);
 
     router.get('/api/get-all-courses', courseController.handleGetAllCourses);
     router.post('/api/create-new-course', courseController.handleCreateNewCourse);
@@ -55,7 +56,7 @@ let intitWebRoutes = (app) => {
     router.post('/api/create-new-roadmap', roadmapController.handleCreateNewRoadmap);
     router.put('/api/edit-roadmap', roadmapController.handleEditRoadmap);
     router.delete('/api/delete-roadmap', roadmapController.handleDeleteRoadmap);
-
+    router.get('/api/get-roadmaps', roadmapController.handleGetRoadmaps);
 
 
     router.get('/api/get-all-scholastic', roadmapController.handleGetAllScholastics);

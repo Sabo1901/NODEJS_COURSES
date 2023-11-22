@@ -22,6 +22,29 @@ let getAllRoadmaps = (roadmapId) => {
     })
 
 }
+let getRoadmaps = (roadmapId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let roadmaps = '';
+            if (roadmapId === 'ALL') {
+                roadmaps = await db.Roadmap.findAll({
+                    // attributes: {
+                    //     exclude: ['price']
+                    // }
+                })
+            } if (roadmapId && roadmapId !== 'ALL') {
+                roadmaps = await db.Roadmap.findOne({
+                    where: { id: roadmapId }
+
+                })
+            }
+            resolve(roadmaps)
+        } catch (e) {
+            reject(e);
+        }
+    })
+
+}
 
 
 let createNewRoadmap = (data) => {
@@ -254,5 +277,6 @@ module.exports = {
     createNewRoadmap: createNewRoadmap,
     deleteRoadmap: deleteRoadmap,
     updateRoadmapData: updateRoadmapData,
-    getDetailScholasticByIdService: getDetailScholasticByIdService
+    getDetailScholasticByIdService: getDetailScholasticByIdService,
+    getRoadmaps: getRoadmaps
 }

@@ -182,7 +182,17 @@ let handleEditBlog = async (req, res) => {
     let message = await userService.updateBlogData(data);
     return res.status(200).json(message)
 }
-
+let getDetailUserById = async (req, res) => {
+    try {
+        let infor = await userService.getDetailUserByIdService(req.query.id);
+        return res.status(200).json(infor);
+    } catch (e) {
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server...'
+        })
+    }
+}
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllUsers: handleGetAllUsers,
@@ -197,5 +207,6 @@ module.exports = {
     getTopBlogHome: getTopBlogHome,
     handleGetAllBlogsUser: handleGetAllBlogsUser,
     handleDeleteBlog: handleDeleteBlog,
-    handleEditBlog: handleEditBlog
+    handleEditBlog: handleEditBlog,
+    getDetailUserById: getDetailUserById
 }
