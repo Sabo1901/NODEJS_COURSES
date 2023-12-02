@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     };
     Roadmap.init({
         semester: DataTypes.INTEGER,
-        credit: DataTypes.INTEGER,
+        credit: DataTypes.STRING,
         prerequisite: DataTypes.STRING,
         courseId: DataTypes.INTEGER,
         scholasticId: DataTypes.INTEGER,

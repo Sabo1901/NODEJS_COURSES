@@ -12,7 +12,7 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             credit: {
-                type: Sequelize.INTEGER
+                type: Sequelize.STRING
             },
             prerequisite: {
                 type: Sequelize.STRING

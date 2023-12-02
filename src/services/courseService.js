@@ -56,7 +56,11 @@ let deleteCourse = (courseId) => {
             where: { id: courseId },
             raw: false
         })
-        if (!foundCourse) {
+        let foundMarkdown = await db.Markdown.findOne({
+            where: { courseId: courseId },
+            raw: false
+        })
+        if (!foundCourse && foundMarkdown) {
             resolve({
                 errCode: 2,
                 errMessage: `The Course isn't exits`
@@ -66,7 +70,9 @@ let deleteCourse = (courseId) => {
         await db.Course.destroy({
             where: { id: courseId }
         })
-
+        await db.Markdown.destroy({
+            where: { courseId: courseId }
+        })
         resolve({
             errCode: 0,
             errMessage: 'The Course is deleted'
@@ -119,7 +125,7 @@ let getTopCourseHome = (limitInput) => {
         try {
             let courses = await db.Course.findAll({
                 limit: limitInput,
-                order: [['createdAt', 'DESC']],
+                order: [['viewed', 'DESC']],
                 raw: true,
                 nest: true
             })
