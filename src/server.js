@@ -12,6 +12,19 @@ let app = express();
 //     origin: 'http://localhost:3000',
 //     credentials: true,
 // }));
+const apiKeys = ['API1', 'API2'];
+
+const apiKeyMiddleware = (req, res, next) => {
+    const providedApiKey = req.headers['x-api-key'];
+
+    if (!providedApiKey || !apiKeys.includes(providedApiKey)) {
+        return res.status(403).json({ error: 'Invalid API Key' });
+    }
+
+    next();
+};
+
+// app.use(apiKeyMiddleware);
 app.use(cors({ credentials: true, origin: true }));
 
 

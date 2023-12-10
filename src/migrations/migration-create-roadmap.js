@@ -17,6 +17,12 @@ module.exports = {
             prerequisite: {
                 type: Sequelize.STRING
             },
+            alternativecourse: {
+                type: Sequelize.STRING
+            },
+            concurrentcourse: {
+                type: Sequelize.STRING
+            },
             courseId: {
                 type: Sequelize.INTEGER
             },

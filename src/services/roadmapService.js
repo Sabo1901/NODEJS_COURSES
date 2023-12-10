@@ -54,6 +54,8 @@ let createNewRoadmap = (data) => {
                 semester: data.semester,
                 credit: data.credit,
                 prerequisite: data.prerequisite,
+                alternativecourse: data.alternativecourse,
+                concurrentcourse: data.concurrentcourse,
                 courseId: data.courseId,
                 scholasticId: data.scholasticId,
             })
@@ -107,6 +109,8 @@ let updateRoadmapData = (data) => {
                 roadmap.semester = data.semester;
                 roadmap.credit = data.credit;
                 roadmap.prerequisite = data.prerequisite;
+                roadmap.alternativecourse = data.alternativecourse;
+                roadmap.concurrentcourse = data.concurrentcourse;
                 roadmap.courseId = data.courseId;
                 roadmap.scholasticId = data.scholasticId;
 

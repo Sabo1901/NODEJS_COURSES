@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         semester: DataTypes.INTEGER,
         credit: DataTypes.STRING,
         prerequisite: DataTypes.STRING,
+        alternativecourse: DataTypes.STRING,
+        concurrentcourse: DataTypes.STRING,
         courseId: DataTypes.INTEGER,
         scholasticId: DataTypes.INTEGER,
     }, {
